@@ -11,7 +11,7 @@
 <body>
 <main>
   <h3>글 쓰기</h3>
-  <form method="post">
+  <form th:action="@{/post/postAdd}" method="post">
     <p><label><input type="text" name="title" placeholder="제목" required
         autofocus/></label></p>
     <p><label><textarea name="content" placeholder="내용"

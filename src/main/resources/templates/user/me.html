@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layouts/normal::html(title=~{::title}, style=~{::style}, main=~{::main})}">
+<head>
+  <title>회원</title>
+</head>
+<body>
+<main>
+  <h3>내 정보</h3>
+  <table class="info" sec:authorize="isAuthenticated()">
+    <tr>
+      <th>회원번호</th>
+      <td sec:authentication="principal.userId">99</td>
+    </tr>
+    <tr>
+      <th>이메일</th>
+      <td sec:authentication="principal.email">hong@gmail.com</td>
+    </tr>
+    <tr>
+      <th>이름</th>
+      <td sec:authentication="principal.name">홍길동</td>
+    </tr>
+  </table>
+  <p><a th:href="@{/user/password}">비밀번호 변경</a></p>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit">로그아웃</button>
+  </form>
+</main>
+</body>
+</html>

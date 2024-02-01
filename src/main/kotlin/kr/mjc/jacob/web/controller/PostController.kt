@@ -8,6 +8,7 @@ import kr.mjc.jacob.web.dao.User
 import kr.mjc.jacob.web.fullUrl
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -43,7 +44,7 @@ class PostController(val postDao: PostDao) {
    * 글쓰기
    */
   @PostMapping("/post/postAdd")
-  fun postAdd(post: Post, @SessionAttribute user: User): String {
+  fun postAdd(post: Post, @AuthenticationPrincipal user: User): String {
     postDao.addPost(post.setUser(user))
     return "redirect:/post/posts"
   }
@@ -52,7 +53,9 @@ class PostController(val postDao: PostDao) {
    * 글보기
    */
   @GetMapping("/post/post")
-  fun post(postId: Int, model: Model) {
+  fun post(postId: Int, @AuthenticationPrincipal user: User?, model: Model) {
+    val post = postDao.getPost(postId)
+    if (post?.userId == user?.userId) model.addAttribute("owner", true)
     model.addAttribute("post", postDao.getPost(postId))
   }
 
@@ -60,7 +63,8 @@ class PostController(val postDao: PostDao) {
    * 글수정 화면
    */
   @GetMapping("/post/postUpdate")
-  fun postUpdateForm(postId: Int, @SessionAttribute user: User, model: Model) {
+  fun postUpdateForm(postId: Int, @AuthenticationPrincipal user: User,
+      model: Model) {
     val post = getPost(postId, user.userId)
     model.addAttribute("post", post)
   }
@@ -69,7 +73,7 @@ class PostController(val postDao: PostDao) {
    * 글수정
    */
   @PostMapping("/post/postUpdate")
-  fun postUpdate(post: Post, @SessionAttribute user: User): String {
+  fun postUpdate(post: Post, @AuthenticationPrincipal user: User): String {
     getPost(post.postId, user.userId)
     post.setUser(user)
     postDao.updatePost(post)
@@ -80,7 +84,7 @@ class PostController(val postDao: PostDao) {
    * 글삭제
    */
   @GetMapping("/post/deletePost")
-  fun deletePost(postId: Int, @SessionAttribute user: User,
+  fun deletePost(postId: Int, @AuthenticationPrincipal user: User,
       @SessionAttribute("CURRENT_PAGE") currentPage: String): String {
     getPost(postId, user.userId)
     postDao.deletePost(postId, user.userId)

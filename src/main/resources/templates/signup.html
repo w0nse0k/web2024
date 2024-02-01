@@ -6,7 +6,7 @@
 <body>
 <main>
   <h3>회원 가입</h3>
-  <form method="post">
+  <form th:action="@{/signup}" method="post">
     <ul class="list">
       <li><label><input type="email" name="email" placeholder="이메일" required
           autofocus/></label>
@@ -21,8 +21,7 @@
       <button type="submit">등록</button>
     </p>
   </form>
-  <p th:if="${#strings.equals(param.mode,'FAILURE')}" class="warn">회원가입
-    실패입니다.</p>
+  <p th:if="${param.error}" class="warn">이메일 중복입니다.</p>
 </main>
 </body>
 </html>

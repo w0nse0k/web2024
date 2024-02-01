@@ -11,5 +11,7 @@ data class Post(var postId: Int = 0, var title: String = "",
     name = user.name
   }
 
+  val contentBr get() = content.replace("\n", "<br/>\n")
+
   val contentHtml get() = Encode.forHtml(content).replace("\n", "<br/>\n")
 }

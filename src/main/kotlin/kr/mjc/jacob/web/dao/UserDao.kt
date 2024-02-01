@@ -1,7 +1,8 @@
 package kr.mjc.jacob.web.dao
 
 import kr.mjc.jacob.web.toMap
-import lombok.AllArgsConstructor
+import org.slf4j.LoggerFactory
+import org.springframework.dao.DataAccessException
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -13,25 +14,26 @@ import org.springframework.stereotype.Repository
  * @author Jacob
  */
 @Repository
-@AllArgsConstructor
 class UserDao(val jt: NamedParameterJdbcTemplate) {
-  private val LIST_USERS =
-    "select userId, email, name from user order by userId desc limit :offset, :count"
 
-  private val GET_USER =
-    "select userId, email, name from user where userId=:userId"
+  companion object {
+    const val LIST_USERS =
+      "select userId, email, name from user order by userId desc limit :offset, :count"
 
-  private val LOGIN =
-    "select userId, email, name from user where email=:email and password=sha2(:password,256)"
+    const val GET_USER =
+      "select userId, email, password, name from user where userId=:userId"
 
-  private val ADD_USER =
-    "insert user(email, password, name) values(:email,sha2(:password,256),:name) returning userId"
+    const val ADD_USER =
+      "insert user(email, password, name) values(:email,:password,:name) returning userId"
 
-  private val UPDATE_PASSWORD =
-    "update user set password=sha2(:newPassword,256) where userId=:userId and password=sha2(:password,256)"
+    const val CHANGE_PASSWORD =
+      "update user set password=:password where userId=:userId"
 
-  private val DELETE_USER =
-    "delete from user where userId=:userId and password=sha2(:password,256)"
+    const val DELETE_USER =
+      "delete from user where userId=:userId and password=:password"
+  }
+
+  private val log = LoggerFactory.getLogger(this::class.java)
 
   /**
    * resultSet을 user에 자동 매핑하는 매퍼
@@ -59,38 +61,24 @@ class UserDao(val jt: NamedParameterJdbcTemplate) {
   }
 
   /**
-   * 로그인
-   * @param email    이메일
-   * @param password 비밀번호
-   * @return 로그인 성공하면 회원정보, 실패하면 NULL
-   */
-  fun login(email: String, password: String): User? {
-    val params = mapOf("email" to email, "password" to password)
-    return jt.queryForObject(LOGIN, params, userMapper)
-  }
-
-  /**
    * 회원 가입
    * @param user 회원정보
    * @throws DataAccessException 이메일 중복으로 회원가입 실패 시
    */
-  fun addUser(user: User): Int {
-    return jt.queryForObject(ADD_USER, user.toMap(), Int::class.java)!!
+  fun addUser(user: User) {
+    user.userId = jt.queryForObject(ADD_USER, user.toMap(), Int::class.java)!!
   }
 
   /**
    * 비밀번호 수정
    *
-   * @param userId          회원번호
-   * @param currentPassword 현재 비밀번호
-   * @param newPassword     새 비밀번호
+   * @param userId    회원번호
+   * @param password  새 비밀번호
    * @return 수정 성공시 1, 회원이 없거나 비밀번호가 틀리면 0
    */
-  fun updatePassword(userId: Int, password: String, newPassword: String): Int {
-    val params = mapOf(
-      "userId" to userId, "password" to password, "newPassword" to newPassword
-    )
-    return jt.update(UPDATE_PASSWORD, params)
+  fun changePassword(userId: Int, password: String): Int {
+    val params = mapOf("userId" to userId, "password" to password)
+    return jt.update(CHANGE_PASSWORD, params)
   }
 
   /**
