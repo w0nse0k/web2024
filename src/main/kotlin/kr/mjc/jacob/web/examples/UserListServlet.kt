@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired
 @WebServlet("/examples/users")
 class UserListServlet : HttpServlet() {
 
+  // servlet은 constructor를 사용하지 않으므로 constructor inject을 하지 않고
+  // @AutowiredWired를 사용해서 field injection을 한다.
+  // servlet을 생성한 후에 injection을 하므로 lateinit var로 설정한다.
   @Autowired lateinit var userDao: UserDao
 
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
