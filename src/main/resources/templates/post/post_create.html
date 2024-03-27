@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>Post Create</h2>
+  <form th:action="@{/post/post_create}" method="post">
+    <p><input type="text" name="title" maxlength="255" placeholder="제목" required
+        class="form-control"></p>
+    <p><textarea name="content" cols="40" rows="10" placeholder="내용" required
+        class="form-control"></textarea></p>
+    <p class="btn-group d-flex">
+      <button type="submit" class="btn btn-success flex-grow-1">저장</button>
+      <button id="btnCancel" type="button"
+          class="btn btn-secondary flex-grow-1">취소
+      </button>
+    </p>
+  </form>
+</main>
+<script>
+  document.querySelector("#btnCancel").addEventListener('click', function () {
+    history.back();
+  })
+</script>
+</body>
+</html>

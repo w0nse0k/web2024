@@ -1,21 +1,2 @@
-* {margin:0; padding:0;}
-main {padding:4px;}
-h1, h3 {padding:8px;}
-a {text-decoration:none;}
-ul {list-style-type:none;}
-ul.nav {padding:8px;}
-.nav li {display:inline-block; padding:2px;}
-ul.list {border-top:1px solid gray;}
-.list li {border-bottom:1px solid gray; padding:4px;}
-header {background-color:teal;}
-header * {color:white;}
-table {border-collapse:collapse; width:100%; border-top:1px solid gray; margin-bottom:8px;}
-tr {border-bottom:1px solid gray;}
-th {text-align:left; background-color:teal; color:white;}
-.list th, .list td {padding:2px;}
-.info th, .info td {padding:4px;}
-.info th {width:100px;}
-form {padding-right:10px;}
-form * {padding:4px;}
-p {padding:4px;}
-p.warn {color:red;}
+* {font-family:NanumGothicCoding, monospace;}
+p.message {color:orangered;}

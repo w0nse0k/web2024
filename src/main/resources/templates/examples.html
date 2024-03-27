@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>Servlet Examples</h2>
+  <table class="table table-sm table-striped border-top border-5">
+    <tr>
+      <th>HelloServlet</th>
+      <td><a th:href="@{/servlets/hello}" th:text="@{/servlets/hello}"></a></td>
+    </tr>
+    <tr>
+      <th>UserListServlet</th>
+      <td><a th:href="@{/servlets/users}" th:text="@{/servlets/users}"></a></td>
+    </tr>
+    <tr>
+      <th>ForwardServlet</th>
+      <td><a th:href="@{/servlets/forward}" th:text="@{/servlets/forward}"></a>
+      </td>
+    </tr>
+    <tr>
+      <th>RedirectServlet</th>
+      <td><a th:href="@{/servlets/redirect}"
+          th:text="@{/servlets/redirect}"></a></td>
+    </tr>
+    <tr>
+      <th>DispatcherServlet</th>
+      <td><a th:href="@{/dispatcher/examples/hello}"
+          th:text="@{/dispatcher/examples/hello}"></a><br>
+        <a th:href="@{/dispatcher/examples/users}"
+            th:text="@{/dispatcher/examples/users}"></a></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

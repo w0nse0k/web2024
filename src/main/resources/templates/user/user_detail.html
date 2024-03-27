@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>User Detail</h2>
+  <table class="table table-sm table-striped border-top border-5"
+      th:object="${user}">
+    <tr>
+      <th>회원번호</th>
+      <td th:text="*{id}">99</td>
+    </tr>
+    <tr>
+      <th>이메일</th>
+      <td th:text="*{username}">hong@gmail.com</td>
+    </tr>
+    <tr>
+      <th>이름</th>
+      <td th:text="*{firstName}">홍길동</td>
+    </tr>
+    <tr>
+      <th>가입일</th>
+      <td th:text="*{dateJoinedFormatted}">홍길동</td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

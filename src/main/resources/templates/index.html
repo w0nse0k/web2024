@@ -1,31 +1,8 @@
 <!DOCTYPE html>
-<html
-    th:replace="~{layouts/base::html(title=~{::title}, header=~{::header}, main=~{::main})}">
-<head>
-  <title>웹프로그래밍II</title>
-</head>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
-<header id="header">
-  <h1>웹프로그래밍II</h1>
-</header>
-<main>
-  <h2>Servlet Examples</h2>
-  <ul class="list">
-    <li><a th:href="@{/examples/hello}">HelloServlet</a></li>
-    <li>Forward: <a th:href="@{/examples/forward}"
-        th:text="@{/examples/forward}">HelloServlet</a>
-    </li>
-    <li>Redirect: <a th:href="@{/examples/redirect}"
-        th:text="@{/examples/redirect}">HelloServlet</a>
-    </li>
-    <li><a th:href="@{/examples/users}">회원목록</a></li>
-  </ul>
-  <p></p>
-  <h2>Spring Web Application</h2>
-  <ul class="list">
-    <li><a th:href="@{/hello}">/hello</a></li>
-    <li><a th:href="@{/user/users}">회원-포스트</a></li>
-  </ul>
+<main class="container-fluid pt-3">
+  <h1>Welcome to WebProgrammingII!</h1>
 </main>
 </body>
 </html>

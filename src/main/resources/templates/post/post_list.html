@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>Post List</h2>
+  <p><a th:href="@{/post/post_create}" class="btn btn-success px-5">글쓰기</a></p>
+  <ul th:replace="~{layouts/pagination::ul}"></ul>
+  <table class="table table-sm table-striped table-hover">
+    <tr class="table-dark">
+      <th>번호</th>
+      <th>제목</th>
+      <th>글쓴이</th>
+      <th>시간</th>
+    </tr>
+    <tr th:each="post: ${page.content}">
+      <td th:text="${post.id}">99</td>
+      <td><a th:href="@{/post/post_detail(id=${post.id})}" th:text="${post.title}"></a>
+      </td>
+      <td><a th:href="@{/user/user_detail(id=${post.userId})}"
+          th:text="${post.firstName}">김철수</a></td>
+      <td th:text="${#temporals.format(post.pubDate, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

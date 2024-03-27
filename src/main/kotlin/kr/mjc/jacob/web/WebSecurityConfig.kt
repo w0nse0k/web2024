@@ -18,13 +18,13 @@ class WebSecurityConfig {
   @Bean
   fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
     return http.authorizeHttpRequests { requests ->
-      requests.requestMatchers("/post/postAdd", "/post/postUpdate", "/user/me",
-          "/user/password").authenticated()
+      requests.requestMatchers("/post/post_create", "/post/post_update",
+          "/post/deletePost", "/user/profile", "/user/password").authenticated()
       requests.anyRequest().permitAll()
     }.formLogin { form ->
       form.loginPage("/login")
-      form.defaultSuccessUrl("/user/users")
-    }.logout { logout -> logout.logoutSuccessUrl("/user/users") }.build()
+      form.defaultSuccessUrl("/user/user_list")
+    }.logout { logout -> logout.logoutSuccessUrl("/user/user_list") }.build()
   }
 
   @Bean

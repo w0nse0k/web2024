@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>User Profile</h2>
+  <table th:object="${session.user}"
+      class="table table-sm table-striped border-top border-5">
+    <tr>
+      <th>회원번호</th>
+      <td th:text="*{id}">99</td>
+    </tr>
+    <tr>
+      <th>이메일</th>
+      <td th:text="*{username}">hong@gmail.com</td>
+    </tr>
+    <tr>
+      <th>이름</th>
+      <td th:text="*{firstName}">홍길동</td>
+    </tr>
+    <tr>
+      <th>가입일시</th>
+      <td th:text="*{dateJoinedFormatted}">홍길동</td>
+    </tr>
+  </table>
+  <form th:action="@{/logout}" method="post">
+    <p class="btn-group d-flex">
+      <a th:href="@{/user/password}" class="btn btn-success flex-grow-1">비밀번호
+        변경</a>
+      <button type="submit" class="btn btn-secondary flex-grow-1">로그아웃</button>
+    </p>
+  </form>
+  <p id="message" class="message"><span th:if="${password_changed}">비밀번호를 변경했습니다.</span>
+  </p>
+</main>
+<script>
+  document.forms[0].addEventListener('submit', event => {
+    if (!confirm("로그아웃 하시겠습니까?")) event.preventDefault()
+  })
+</script>
+</body>
+</html>

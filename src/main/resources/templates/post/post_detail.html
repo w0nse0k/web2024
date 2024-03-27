@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>Post Detail</h2>
+  <form th:action="@{/post/deletePost(id=${post.id})}" method="post">
+    <p class="btn-group"><a th:href="${session['CURRENT_PAGE']}"
+        class="btn btn-primary px-4">목록</a><a
+        th:href="@{/post/post_update(id=${post.id})}"
+        class="btn btn-success px-4">수정</a>
+      <button type="submit" class="btn btn-secondary px-4">삭제</button>
+    </p>
+  </form>
+  <form class="form-check form-switch">
+    <input th:if="${param.safe}" class="form-check-input" type="checkbox"
+        name="safe" value="safe" checked>
+    <input th:unless="${param.safe}" class="form-check-input" type="checkbox"
+        name="safe" value="safe">
+    <label class="form-check-label">Safe</label>
+    <input type="hidden" name="id" th:value="${post.id}"/>
+  </form>
+  <ul class="list-group" th:object="${post}">
+    <li th:text="|*{id}. *{title}|" class="list-group-item fw-bold"></li>
+    <li class="list-group-item"><span th:text="*{pubDate}"></span>, <a
+        th:href="@{/user/user_detail(id=*{userId})}" th:text="*{firstName}"></a>
+    </li>
+    <li th:unless="${param.safe}" th:utext="*{contentHtml}"
+        class="list-group-item"></li>
+    <li th:if="${param.safe}" th:utext="*{contentBr}"
+        class="list-group-item"></li>
+  </ul>
+</main>
+<script>
+  document.forms[0].addEventListener('submit', function (event) {
+    if (!confirm("삭제하시겠습니까?")) event.preventDefault()
+  })
+  document.forms[1].addEventListener('change', function () {
+    this.submit();
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<ul class="pagination justify-content-center">
+  <li class="page-item" th:unless="${page.first}"><a href="?page=0"
+      class="page-link">&laquo; 처음</a>
+  </li>
+  <li class="page-item disabled" th:if="${page.first}"><a href="#"
+      class="page-link">&laquo; 처음</a>
+  </li>
+  <li class="page-item" th:unless="${page.first}"><a
+      th:href="|?page=${page.number - 1}|" class="page-link">이전</a>
+  </li>
+  <li class="page-item disabled" th:if="${page.first}"><a href="#"
+      th:href="|?page=${page.number - 1}|" class="page-link">이전</a>
+  </li>
+  <li class="page-item"><a href="#" class="page-link"
+      th:text="|Page ${page.number + 1} of ${page.totalPages}|"></a></li>
+  <li class="page-item" th:unless="${page.last}"><a
+      th:href="|?page=${page.number + 1}|" class="page-link">다음</a>
+  </li>
+  <li class="page-item disabled" th:if="${page.last}"><a href="#"
+      class="page-link">다음</a>
+  </li>
+  <li class="page-item" th:unless="${page.last}"><a
+      th:href="|?page=${page.totalPages - 1}|" class="page-link">마지막 &raquo;</a>
+  </li>
+  <li class="page-item disabled" th:if="${page.last}"><a href="#"
+      class="page-link">마지막 &raquo;</a>
+  </li>
+</ul>

@@ -1,12 +1,14 @@
 package kr.mjc.jacob.web.controller
 
 import jakarta.servlet.http.HttpServletRequest
-import kr.mjc.jacob.web.dao.Limit
-import kr.mjc.jacob.web.dao.Post
-import kr.mjc.jacob.web.dao.PostDao
-import kr.mjc.jacob.web.dao.User
 import kr.mjc.jacob.web.fullUrl
+import kr.mjc.jacob.web.repository.Post
+import kr.mjc.jacob.web.repository.PostRepository
+import kr.mjc.jacob.web.repository.User
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
@@ -15,79 +17,88 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.SessionAttribute
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
 
 /**
  * Servlet API를 사용하지 않는 컨트롤러
  */
 @Controller
-class PostController(val postDao: PostDao) {
+class PostController(val postRepository: PostRepository) {
+
+  companion object {
+    private const val PAGE_SIZE = 10
+  }
 
   private val log = LoggerFactory.getLogger(this::class.java)
 
   /**
    * 글목록
    */
-  @GetMapping("/post/posts")
-  fun posts(req: HttpServletRequest, limit: Limit) {
+  @GetMapping("/post/post_list")
+  fun postList(req: HttpServletRequest, page: Int = 0) {
     // 현재 목록을 세션에 저장
     req.session.setAttribute("CURRENT_PAGE", req.fullUrl)
     log.debug("currentPage = {}", req.fullUrl)
-    val totalCount = postDao.countPosts()     // 전체 포스트 갯수
-    val maxPage = (totalCount - 1) / limit.count + 1   // 페이지 끝
 
-    req.setAttribute("posts", postDao.listPosts(limit))
-    req.setAttribute("totalCount", totalCount)
-    req.setAttribute("maxPage", maxPage)
+    val postPage: Page<Post> = postRepository.findAll(
+        PageRequest.of(page, PAGE_SIZE, Sort.Direction.DESC, "id"))
+    req.setAttribute("page", postPage)
   }
 
   /**
    * 글쓰기
    */
-  @PostMapping("/post/postAdd")
-  fun postAdd(post: Post, @AuthenticationPrincipal user: User): String {
-    postDao.addPost(post.setUser(user))
-    return "redirect:/post/posts"
+  @PostMapping("/post/post_create")
+  fun postCreate(post: Post, @AuthenticationPrincipal user: User): String {
+    postRepository.save(post.setUser(user))
+    return "redirect:/post/post_list"
   }
 
   /**
    * 글보기
    */
-  @GetMapping("/post/post")
-  fun post(postId: Int, @AuthenticationPrincipal user: User?, model: Model) {
-    val post = postDao.getPost(postId)
-    if (post?.userId == user?.userId) model.addAttribute("owner", true)
-    model.addAttribute("post", postDao.getPost(postId))
+  @GetMapping("/post/post_detail")
+  fun postDetail(id: Int, @AuthenticationPrincipal user: User?, model: Model) {
+    try {
+      val post: Post? = postRepository.findById(id).orElseThrow()
+      if (post?.userId == user?.id) model.addAttribute("owner", true)
+      model.addAttribute("post", post)
+    } catch (e: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+    }
   }
 
   /**
    * 글수정 화면
    */
-  @GetMapping("/post/postUpdate")
-  fun postUpdateForm(postId: Int, @AuthenticationPrincipal user: User,
-      model: Model) {
-    val post = getPost(postId, user.userId)
+  @GetMapping("/post/post_update")
+  fun postUpdate(id: Int, @AuthenticationPrincipal user: User, model: Model) {
+    val post = getPost(id, user.id)
     model.addAttribute("post", post)
   }
 
   /**
    * 글수정
    */
-  @PostMapping("/post/postUpdate")
-  fun postUpdate(post: Post, @AuthenticationPrincipal user: User): String {
-    getPost(post.postId, user.userId)
-    post.setUser(user)
-    postDao.updatePost(post)
-    return "redirect:/post/post?postId=" + post.postId
+  @PostMapping("/post/post_update")
+  fun postUpdate(postForm: Post, @AuthenticationPrincipal user: User): String {
+    val post = getPost(postForm.id, user.id)
+    post.title = postForm.title
+    post.content = postForm.content
+    post.lastModified = LocalDateTime.now()
+    postRepository.save(post)
+    return "redirect:/post/post_detail?id=" + post.id
   }
 
   /**
    * 글삭제
    */
-  @GetMapping("/post/deletePost")
-  fun deletePost(postId: Int, @AuthenticationPrincipal user: User,
-      @SessionAttribute("CURRENT_PAGE") currentPage: String): String {
-    getPost(postId, user.userId)
-    postDao.deletePost(postId, user.userId)
+  @PostMapping("/post/deletePost")
+  fun deletePost(id: Int, @AuthenticationPrincipal user: User,
+                 @SessionAttribute("CURRENT_PAGE")
+                 currentPage: String): String {
+    getPost(id, user.id)
+    postRepository.deleteById(id)
     return "redirect:$currentPage"
   }
 
@@ -96,10 +107,10 @@ class PostController(val postDao: PostDao) {
    *
    * @throws ResponseStatusException 권한이 없을 경우
    */
-  private fun getPost(postId: Int, userId: Int): Post {
-    val post = postDao.getPost(postId)
-    if (userId != post?.userId) throw ResponseStatusException(
-        HttpStatus.UNAUTHORIZED)
+  private fun getPost(id: Int, userId: Int): Post {
+    val post = postRepository.findById(id).orElseThrow()
+    if (userId != post.userId) throw ResponseStatusException(
+        HttpStatus.UNAUTHORIZED)  // 401
     return post
   }
 }

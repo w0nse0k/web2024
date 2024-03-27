@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>User List</h2>
+  <ul th:replace="~{layouts/pagination::ul}"></ul>
+  <table class="table table-sm table-striped table-hover">
+    <tr class="table-dark">
+      <th>번호</th>
+      <th>이메일</th>
+      <th>이름</th>
+      <th>가입일시</th>
+    </tr>
+    <tr th:each="user: ${page.content}">
+      <td th:text="${user.id}">1</td>
+      <td><a th:href="@{/user/user_detail(id=${user.id})}"
+          th:text="${user.username}">lee@naver.com</a></td>
+      <td th:text="${user.firstName}">이병헌</td>
+      <td th:text="${user.dateJoinedFormatted}">2000-01-01 00:00:00</td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

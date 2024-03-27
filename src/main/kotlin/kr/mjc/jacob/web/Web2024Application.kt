@@ -7,8 +7,11 @@ import org.springframework.boot.web.servlet.ServletComponentScan
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
-@ServletComponentScan(basePackages = ["kr.mjc.jacob.web.examples"])
+@ServletComponentScan(basePackages = ["kr.mjc.jacob.web.servlets"])
 class Web2024Application : SpringBootServletInitializer() {
+  /**
+   * war 파일을 위한 구성
+   */
   override fun configure(
       application: SpringApplicationBuilder): SpringApplicationBuilder {
     return application.sources(Web2024Application::class.java)

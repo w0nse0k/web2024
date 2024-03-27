@@ -2,12 +2,14 @@ package kr.mjc.jacob.web
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
-import kr.mjc.jacob.web.dao.User
+import kr.mjc.jacob.web.repository.User
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextImpl
-import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
+import java.net.URLEncoder
+import java.nio.charset.Charset
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 const val SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT"
 
@@ -16,15 +18,6 @@ const val SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT"
  */
 val HttpServletRequest.fullUrl: String
   get() = if (queryString == null) requestURL.toString() else "$requestURL?$queryString"
-
-/**
- * 오브젝트를 맵으로 변환
- */
-fun Any.toMap(): Map<String, Any?> {
-  return (this::class as KClass<Any>).memberProperties.associate { prop ->
-    prop.name to prop.get(this)
-  }
-}
 
 /**
  * Spring Security User
@@ -36,3 +29,17 @@ var HttpSession.user: User?
     this.setAttribute(SPRING_SECURITY_CONTEXT, SecurityContextImpl(
         UsernamePasswordAuthenticationToken(value, null, value!!.authorities)))
   }
+
+val String.urlEncoded: String
+  get() = URLEncoder.encode(this, Charset.defaultCharset())
+
+/**
+ * 날짜를 "yyyy-MM-dd HH:mm:ss"로 포맷하는 formatter
+ */
+val formatter: DateTimeFormatter =
+  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+/**
+ * 날짜를 formatter로 포맷한다.
+ */
+val LocalDateTime.formatted: String get() = this.format(formatter)

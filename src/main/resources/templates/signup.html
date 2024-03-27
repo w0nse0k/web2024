@@ -1,27 +1,35 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/base::html(title=~{::title}, main=~{::main})}">
-<head>
-  <title>회원</title>
-</head>
+<html th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
 <body>
-<main>
-  <h3>회원 가입</h3>
+<main class="container-fluid pt-3">
+  <h2>Sign Up</h2>
   <form th:action="@{/signup}" method="post">
-    <ul class="list">
-      <li><label><input type="email" name="email" placeholder="이메일" required
-          autofocus/></label>
-      </li>
-      <li><label><input type="password" name="password" placeholder="비밀번호"
-          required/></label>
-      </li>
-      <li><label><input type="text" name="name" placeholder="이름"
-          required/></label></li>
-    </ul>
-    <p>
-      <button type="submit">등록</button>
+    <p><input type="email" name="username" placeholder="이메일" required autofocus
+        class="form-control"/>
+    </p>
+    <p><input type="password" name="password" placeholder="비밀번호" required
+        class="form-control"/>
+    </p>
+    <p><input type="password" name="password2" placeholder="비밀번호 확인" required
+        class="form-control"/>
+    </p>
+    <p><input type="text" name="firstName" placeholder="이름" required
+        class="form-control"/></p>
+    <p class="d-grid">
+      <button type="submit" class="btn btn-success btn-block">등록</button>
     </p>
   </form>
-  <p th:if="${param.error}" class="warn">이메일 중복입니다.</p>
+  <p id="message" class="message"><span
+      th:if="${duplicate_email}">이메일 중복입니다.</span>
+  </p>
 </main>
+<script>
+  document.forms[0].addEventListener('submit', function (event) {
+    if (this.password.value !== this.password2.value) {
+      event.preventDefault();
+      document.querySelector("#message").textContent = "비밀번호가 다릅니다.";
+    }
+  })
+</script>
 </body>
 </html>

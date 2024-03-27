@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+<main>
+  <h3>회원 목록</h3>
+  <table class="list">
+    <tr>
+      <th>번호</th>
+      <th>이메일</th>
+      <th>이름</th>
+      <th>가입일시</th>
+    </tr>
+    <tr th:each="user: ${page.content}">
+      <td th:text="${user.id}">1</td>
+      <td th:text="${user.username}">lee@naver.com</td>
+      <td th:text="${user.firstName}">이병헌</td>
+      <td th:text="${user.dateJoined}"></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

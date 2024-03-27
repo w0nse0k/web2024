@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<html
-    th:replace="~{layouts/base::html(title=~{::title}, style=~{::style}, main=~{::main})}">
-<head>
-  <title>에러 페이지</title>
-  <style>th {background-color:orangered;}</style>
-</head>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
 <body>
-<main>
-  <h3>Error Page</h3>
-  <table class="info">
+<main class="container-fluid pt-3">
+  <h2>Error Page</h2>
+  <table class="table table-sm table-striped border-top border-5">
     <tr>
       <th>상태코드</th>
       <td th:text="${status}">404</td>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/base::html(main=~{::main})}">
+<body>
+<main class="container-fluid pt-3">
+  <h2>Post Update</h2>
+  <form th:action="@{/post/post_update}" method="post">
+    <p><input type="text" name="title" th:value="${post.title}" maxlength="255"
+        placeholder="제목" required class="form-control"></p>
+    <p><textarea name="content" th:text="${post.content}" cols="40" rows="10"
+        placeholder="내용" required class="form-control"></textarea></p>
+    <p class="btn-group d-flex">
+      <button type="submit" class="btn btn-success flex-grow-1">저장</button>
+      <button id="btnCancel" type="button" class="btn btn-secondary flex-grow-1"
+          onclick="history.back()">취소
+      </button>
+    </p>
+    <input type="hidden" name="id" th:value="${post.id}"/>
+  </form>
+</main>
+</body>
+</html>
