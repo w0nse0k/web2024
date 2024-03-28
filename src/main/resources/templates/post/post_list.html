@@ -14,7 +14,8 @@
     </tr>
     <tr th:each="post: ${page.content}">
       <td th:text="${post.id}">99</td>
-      <td><a th:href="@{/post/post_detail(id=${post.id})}" th:text="${post.title}"></a>
+      <td><a th:href="@{/post/post_detail(id=${post.id})}"
+          th:text="${post.title}"></a>
       </td>
       <td><a th:href="@{/user/user_detail(id=${post.userId})}"
           th:text="${post.firstName}">김철수</a></td>

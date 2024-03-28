@@ -12,10 +12,6 @@
     <appender-ref ref="STDOUT"/>
   </root>
 
-  <logger name="org.springframework.security" level="trace" additivity="false">
-    <appender-ref ref="STDOUT"/>
-  </logger>
-
   <!-- additivity="true" 이면 root 로거의 출력과 중복되어 두번 출력한다. -->
   <logger name="kr.mjc.jacob" level="debug" additivity="false">
     <!-- appender를 지정하지 않으면 출력되지 않는다. -->

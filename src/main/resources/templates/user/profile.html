@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:replace="~{layouts/base::html(main=~{::main}, script=~{::script})}">
 <body>
 <main class="container-fluid pt-3">
   <h2>User Profile</h2>
-  <table th:object="${session.user}"
+  <table sec:authorize="isAuthenticated()"
       class="table table-sm table-striped border-top border-5">
     <tr>
       <th>회원번호</th>
-      <td th:text="*{id}">99</td>
+      <td sec:authentication="principal.id">99</td>
     </tr>
     <tr>
       <th>이메일</th>
-      <td th:text="*{username}">hong@gmail.com</td>
+      <td sec:authentication="principal.username">hong@gmail.com</td>
     </tr>
     <tr>
       <th>이름</th>
-      <td th:text="*{firstName}">홍길동</td>
+      <td sec:authentication="principal.firstName">홍길동</td>
     </tr>
     <tr>
       <th>가입일시</th>
-      <td th:text="*{dateJoinedFormatted}">홍길동</td>
+      <td sec:authentication="principal.dateJoinedFormatted">홍길동</td>
     </tr>
   </table>
   <form th:action="@{/logout}" method="post">

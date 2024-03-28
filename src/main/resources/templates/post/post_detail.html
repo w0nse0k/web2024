@@ -21,9 +21,10 @@
   </form>
   <ul class="list-group" th:object="${post}">
     <li th:text="|*{id}. *{title}|" class="list-group-item fw-bold"></li>
-    <li class="list-group-item"><span th:text="*{pubDate}"></span>, <a
-        th:href="@{/user/user_detail(id=*{userId})}" th:text="*{firstName}"></a>
-    </li>
+    <li class="list-group-item"><a th:href="@{/user/user_detail(id=*{userId})}"
+        th:text="*{firstName}"></a>, 등록: <span
+        th:text="*{pubDateFormatted}"></span>, 수정: <span
+        th:text="*{pubDateFormatted}"></span></li>
     <li th:unless="${param.safe}" th:utext="*{contentHtml}"
         class="list-group-item"></li>
     <li th:if="${param.safe}" th:utext="*{contentBr}"

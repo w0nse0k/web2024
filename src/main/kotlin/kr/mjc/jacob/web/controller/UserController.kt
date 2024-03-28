@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
 import kr.mjc.jacob.web.repository.User
 import kr.mjc.jacob.web.repository.UserRepository
+import kr.mjc.jacob.web.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -23,7 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
  */
 @Controller
 class UserController(val userRepository: UserRepository,
-                     val passwordEncoder: PasswordEncoder) {
+                     val passwordEncoder: PasswordEncoder,
+                     val userService: UserService) {
 
   companion object {
     const val LANDING_PAGE = "redirect:/user/user_list"
@@ -52,7 +54,7 @@ class UserController(val userRepository: UserRepository,
     if (!exists) {   // 이메일이 없음. 등록 진행
       user.password = passwordEncoder.encode(user.password)
       userRepository.save(user) // 등록 성공
-      session.setAttribute("user", user)
+      userService.login(user, session)   // 회원가입 후 자동 로그인
       return LANDING_PAGE
     } else {  // 이메일 존재. 등록 실패
       attributes.addFlashAttribute("duplicate_email", "duplicate_email")

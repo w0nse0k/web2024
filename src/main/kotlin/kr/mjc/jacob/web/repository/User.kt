@@ -7,11 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 
 /**
+ * UserDetails 기본 구현.
  * 세션에 넣는 사용자 정보. 세션에 넣는 객체는 Serializable을 구현해야
  * 웹서버를 재시작할 때 세션에 다시 올라간다.
  */
-data class User(@Id val id: Int = 0, @JvmField val username: String = "",
-                @JvmField var password: String = "", val firstName: String = "",
+data class User(@Id val id: Int = 0, private val username: String = "",
+                private var password: String = "", val firstName: String = "",
                 val dateJoined: LocalDateTime = LocalDateTime.now()) :
     UserDetails {
 
@@ -25,6 +26,10 @@ data class User(@Id val id: Int = 0, @JvmField val username: String = "",
   override fun getUsername() = username
   override fun getPassword() = password
   override fun getAuthorities() = setOf<GrantedAuthority>()
+
+  fun setPassword(value: String) {
+    this.password = value
+  }
 
   override fun isAccountNonExpired() = true
   override fun isAccountNonLocked() = true
